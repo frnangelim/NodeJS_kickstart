@@ -17,7 +17,8 @@ db.once('open', function() {
 		phoneNumber: String,
 		adress: String,
 		role: String,
-		coach: String
+		coach: String,
+		students: Array
 	});
 
 	exports.User = mongoose.model('User', userSchema);
