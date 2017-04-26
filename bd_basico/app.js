@@ -1,6 +1,6 @@
 var app = require('./app_config.js');
 
-var userController = require('./userController.js');
+var db = require('./db_config.js');
 
 var validator = require('validator');
 
