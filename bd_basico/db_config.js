@@ -8,7 +8,7 @@ db.on('error', console.error.bind(console, 'Erro ao conectar no banco'))
 
 db.once('open', function() {
 
-	var userSchema = mongoose.Schema({
+	var coachSchema = mongoose.Schema({
 
 		fullName: String,
 		email: String,
@@ -16,10 +16,22 @@ db.once('open', function() {
 		cpf: String,
 		phoneNumber: String,
 		adress: String,
-		role: String,
-		coach: String,
 		students: Array
 	});
 
-	exports.User = mongoose.model('User', userSchema);
+	exports.Coach = mongoose.model('Coach', coachSchema);
+
+	var studentSchema = mongoose.Schema({
+
+		fullName: String,
+		email: String,
+		birthDate: String,
+		cpf: String,
+		phoneNumber: String,
+		adress: String,
+		coach: String
+	});
+
+	exports.Student = mongoose.model('Student', studentSchema);
 });
+
