@@ -4,32 +4,73 @@ var mongoose = require('mongoose').connect(db_string);
 
 var db = mongoose.connection;
 
+var jwt = require('jsonwebtoken');
+
 db.on('error', console.error.bind(console, 'Erro ao conectar no banco'))
 
 db.once('open', function() {
 
+	var userSchema = mongoose.Schema({
+
+		fullName: {
+			type: String,
+			required: true
+		},
+		cpf: {
+			type: String,
+			required: true
+		},
+		age: Number,
+		email: String,
+		address: String,
+		phoneNumber: String
+	});
+
+	exports.User = mongoose.model('User', userSchema);
+
 	var coachSchema = mongoose.Schema({
 
+		login:{
+			type: String,
+			required: true
+		},
+		password:{
+			type: String,
+			required: true
+		},
 		fullName: String,
 		email: String,
 		birthDate: String,
 		cpf: String,
 		phoneNumber: String,
-		adress: String,
-		students: Array
+		address: String,
+		students: Array,
+		token: String
 	});
+
+	coachSchema.methods.generateToken = function(name){
+		return jwt.sign({"name": name}, "embedded");
+	}
 
 	exports.Coach = mongoose.model('Coach', coachSchema);
 
 	var studentSchema = mongoose.Schema({
-
+		login:{
+			type: String,
+			required: true
+		},
+		password:{
+			type: String,
+			required: true
+		},
 		fullName: String,
 		email: String,
 		birthDate: String,
 		cpf: String,
 		phoneNumber: String,
-		adress: String,
-		coach: String
+		address: String,
+		coach: String,
+		token: String
 	});
 
 	exports.Student = mongoose.model('Student', studentSchema);
