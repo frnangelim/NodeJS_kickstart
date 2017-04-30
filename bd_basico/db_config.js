@@ -4,6 +4,8 @@ var mongoose = require('mongoose').connect(db_string);
 
 var db = mongoose.connection;
 
+var bcrpy = require('bcrypt-nodejs');
+
 var jwt = require('jsonwebtoken');
 
 db.on('error', console.error.bind(console, 'Erro ao conectar no banco'))
@@ -18,13 +20,35 @@ db.once('open', function() {
 		},
 		cpf: {
 			type: String,
-			required: true
+			required: true,
+			unique: true
 		},
 		age: Number,
 		email: String,
 		address: String,
-		phoneNumber: String
+		phoneNumber: String,
+		login: {
+			type: String,
+			required: true,
+			unique: true
+		},
+		password: {
+			type: String,
+			required: true
+		}
 	});
+
+	userSchema.methods.generatePassword = function(password){
+		return bcrypt.hashSync(password, bcrypt.genSaltSync(9));
+	}
+
+	userSchema.methods.validatePassword = function(password){
+		return bcrpyt.compareSync(password, this.password);
+	}
+
+	userSchema.methods.generateToken = function(login,name,cpf){
+		return jwt.sign({"login": login, "name": name, "cpf": cpf}, "KeyembeddedKey");
+	}
 
 	exports.User = mongoose.model('User', userSchema);
 
