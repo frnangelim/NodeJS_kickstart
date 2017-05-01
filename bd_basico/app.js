@@ -237,7 +237,6 @@ app.delete('/users/exercise3/:currentcpf', function(req,res){
 
 ///////////////////////// Exercício 4
 
-
 function getToken(req, res, next){
 	var header = req.headers['authorization']
 
@@ -249,11 +248,13 @@ function getToken(req, res, next){
 	}
 }
 
-app.get('/users', getToken, function(req, res){
+app.get('/users/exercise4/list', getToken, function(req, res){
 
 	var token = req.token;
 
-	userController.list(token, function(resp){
+	userController.listProtected(token, function(resp){
 		res.json(resp);
 	});
 });
+
+///////////////////////// Exercício final
