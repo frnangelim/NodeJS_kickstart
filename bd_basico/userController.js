@@ -1,5 +1,20 @@
 var db = require('./db_config.js');
 
+exports.login = function(login, password, callback){
+
+	db.User.findOne({login : login}, function(error, user){
+		if(error){
+			callback({error: 'Deu erro'});
+		}else{
+			if(user.validatePassword(password)){
+				callback('Usuário logado com sucesso.')
+			}else{
+				callback('Login ou senha inválido.');
+			}
+		}
+	});
+};
+
 exports.list = function(callback){
 
 	db.User.find({}, function(error, users){
@@ -27,12 +42,15 @@ exports.listOne = function(cpf, callback){
 
 exports.save = function(fullName, cpf, login, password, callback){
 
-	new db.User({
+
+	var user = new db.User({
 		'fullName': fullName,
 		'cpf': cpf,
-		'login': login,
-		'password': password
-	}).save(function(error, user){
+		'login': login
+	});
+	user.password = user.generatePassword(password)
+
+	user.save(function(error, user){
 		if(error){
 			callback({error:'Não foi possível criar o usuário'});
 		}else{

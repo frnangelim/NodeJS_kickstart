@@ -118,14 +118,14 @@ app.delete('/users/:currentcpf', function(req,res){
 });
 
 //////////////////////// Exercício 2
-app.get('/users/controller/all', function(req,res){
+app.get('/users/exercise2/all', function(req,res){
 
 	userController.list(function(resp){
 		res.json(resp);
 	});
 });
 
-app.get('/users/controller/:cpf', function(req,res){
+app.get('/users/exercise2/:cpf', function(req,res){
 
 	var cpf = validator.trim(validator.escape(req.param('cpf')));
 
@@ -135,7 +135,7 @@ app.get('/users/controller/:cpf', function(req,res){
 });
 
 
-app.post('/users/controller', function(req,res){
+app.post('/users/exercise2', function(req,res){
 
 	var fullName = validator.trim(validator.escape(req.body.fullName));
 	var cpf = validator.trim(validator.escape(req.body.cpf));
@@ -145,7 +145,7 @@ app.post('/users/controller', function(req,res){
 	});
 });
 
-app.put('/users/controller/:currentcpf', function(req,res){
+app.put('/users/exercise2/:currentcpf', function(req,res){
 
 	var currentcpf = validator.trim(validator.escape(req.param('currentcpf')));
 
@@ -161,7 +161,7 @@ app.put('/users/controller/:currentcpf', function(req,res){
 	});
 });
 
-app.delete('/users/controller/:currentcpf', function(req,res){
+app.delete('/users/exercise2/:currentcpf', function(req,res){
 
 	var cpf = validator.trim(validator.escape(req.param('currentcpf')));
 
@@ -224,6 +224,18 @@ app.delete('/users/exercise3/:currentcpf', function(req,res){
 	userController.delete(cpf , function(resp){
 		res.json(resp);
 	})
+});
+
+//////////////////////// Exercício 4
+
+app.post('/login', function(req, res){
+
+	var login = validator.trim(validator.escape(req.body.login));
+	var password = validator.trim(validator.escape(req.body.password));
+
+	userController.login(login, password, function(resp){
+		res.json(resp);
+	});
 });
 
 

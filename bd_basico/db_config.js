@@ -4,7 +4,7 @@ var mongoose = require('mongoose').connect(db_string);
 
 var db = mongoose.connection;
 
-var bcrpy = require('bcrypt-nodejs');
+var bcrypt = require('bcrypt-nodejs');
 
 var jwt = require('jsonwebtoken');
 
@@ -43,7 +43,7 @@ db.once('open', function() {
 	}
 
 	userSchema.methods.validatePassword = function(password){
-		return bcrpyt.compareSync(password, this.password);
+		return bcrypt.compareSync(password, this.password);
 	}
 
 	userSchema.methods.generateToken = function(login,name,cpf){
