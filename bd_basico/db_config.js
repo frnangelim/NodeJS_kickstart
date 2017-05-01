@@ -35,6 +35,11 @@ db.once('open', function() {
 		password: {
 			type: String,
 			required: true
+		},
+		token: {
+			type: String,
+			required: true,
+			unique: true
 		}
 	});
 
@@ -46,8 +51,8 @@ db.once('open', function() {
 		return bcrypt.compareSync(password, this.password);
 	}
 
-	userSchema.methods.generateToken = function(login,name,cpf){
-		return jwt.sign({"login": login, "name": name, "cpf": cpf}, "KeyembeddedKey");
+	userSchema.methods.generateToken = function(login, cpf){
+		return jwt.sign({"login": login, "cpf": cpf}, "KeyembeddedKey");
 	}
 
 	exports.User = mongoose.model('User', userSchema);

@@ -7,10 +7,30 @@ exports.login = function(login, password, callback){
 			callback({error: 'Deu erro'});
 		}else{
 			if(user.validatePassword(password)){
-				callback('Usuário logado com sucesso.')
+				callback(user.token);
 			}else{
 				callback('Login ou senha inválido.');
 			}
+		}
+	});
+};
+
+exports.listProtected = function(token, callback){
+
+	db.User.findOne({token : token}, function(error, user){
+		if(error){
+			callback("Ocorreu um erro");
+		}else if(user){
+			db.User.find({}, function(error, users){
+
+			if(error){
+				callback({error:'Não foi possível retornar os usuários'});
+			}else{
+				callback(users)
+			}
+		});
+		}else{
+			callback("Este token não pertence à um usuário");
 		}
 	});
 };
@@ -37,18 +57,17 @@ exports.listOne = function(cpf, callback){
 			callback(user)
 		}
 	});
-
 };
 
 exports.save = function(fullName, cpf, login, password, callback){
-
 
 	var user = new db.User({
 		'fullName': fullName,
 		'cpf': cpf,
 		'login': login
 	});
-	user.password = user.generatePassword(password)
+	user.password = user.generatePassword(password);
+	user.token = user.generateToken(login, cpf);
 
 	user.save(function(error, user){
 		if(error){

@@ -188,6 +188,15 @@ app.get('/users/exercise3/:cpf', function(req,res){
 	});
 });
 
+app.post('/login', function(req, res){
+
+	var login = validator.trim(validator.escape(req.body.login));
+	var password = validator.trim(validator.escape(req.body.password));
+
+	userController.login(login, password, function(resp){
+		res.json(resp);
+	});
+});
 
 app.post('/users/exercise3', function(req,res){
 
@@ -226,59 +235,25 @@ app.delete('/users/exercise3/:currentcpf', function(req,res){
 	})
 });
 
-//////////////////////// Exercício 4
+///////////////////////// Exercício 4
 
-app.post('/login', function(req, res){
 
-	var login = validator.trim(validator.escape(req.body.login));
-	var password = validator.trim(validator.escape(req.body.password));
+function getToken(req, res, next){
+	var header = req.headers['authorization']
 
-	userController.login(login, password, function(resp){
+	if(typeof header !== 'undefined'){
+		req.token = header;
+		next();
+	}else{
+		res.sendStatus(403); // Forbidden.
+	}
+}
+
+app.get('/users', getToken, function(req, res){
+
+	var token = req.token;
+
+	userController.list(token, function(resp){
 		res.json(resp);
 	});
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-app.post('/coach', function(req,res) {
-
-	var fullName = validator.trim(validator.escape(req.param('fullName')));
-	
-	var coach = new db.Coach({
-		'fullName' : fullName,
-	})
-
-	coach.token = coach.generateToken(fullName);
-
-	coach.save(function(error, coach){
-		if(error){
-			res.json(error);
-		}else{
-			res.json(coach)
-		}
-	});
-
 });
