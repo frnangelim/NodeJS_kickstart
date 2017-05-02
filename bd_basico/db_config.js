@@ -26,82 +26,8 @@ db.once('open', function() {
 		age: Number,
 		email: String,
 		address: String,
-		phoneNumber: String,
-		login: {
-			type: String,
-			required: true,
-			unique: true
-		},
-		password: {
-			type: String,
-			required: true
-		},
-		token: {
-			type: String,
-			required: true,
-			unique: true
-		}
+		phoneNumber: String
 	});
-
-	userSchema.methods.generatePassword = function(password){
-		return bcrypt.hashSync(password, bcrypt.genSaltSync(9));
-	}
-
-	userSchema.methods.validatePassword = function(password){
-		return bcrypt.compareSync(password, this.password);
-	}
-
-	userSchema.methods.generateToken = function(login, cpf){
-		return jwt.sign({"login": login, "cpf": cpf}, "KeyembeddedKey");
-	}
 
 	exports.User = mongoose.model('User', userSchema);
-
-	var coachSchema = mongoose.Schema({
-
-		login:{
-			type: String,
-			required: true
-		},
-		password:{
-			type: String,
-			required: true
-		},
-		fullName: String,
-		email: String,
-		birthDate: String,
-		cpf: String,
-		phoneNumber: String,
-		address: String,
-		students: Array,
-		token: String
-	});
-
-	coachSchema.methods.generateToken = function(name){
-		return jwt.sign({"name": name}, "embedded");
-	}
-
-	exports.Coach = mongoose.model('Coach', coachSchema);
-
-	var studentSchema = mongoose.Schema({
-		login:{
-			type: String,
-			required: true
-		},
-		password:{
-			type: String,
-			required: true
-		},
-		fullName: String,
-		email: String,
-		birthDate: String,
-		cpf: String,
-		phoneNumber: String,
-		address: String,
-		coach: String,
-		token: String
-	});
-
-	exports.Student = mongoose.model('Student', studentSchema);
 });
-
